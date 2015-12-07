@@ -1,22 +1,22 @@
 import time
-import xmlrpclib
+from six.moves import xmlrpc_client
 
 from locust import Locust, events, task, TaskSet
 
 
-class XmlRpcClient(xmlrpclib.ServerProxy):
+class XmlRpcClient(xmlrpc_client.ServerProxy):
     """
     Simple, sample XML RPC client implementation that wraps xmlrpclib.ServerProxy and 
     fires locust events on request_success and request_failure, so that all requests 
     gets tracked in locust's statistics.
     """
     def __getattr__(self, name):
-        func = xmlrpclib.ServerProxy.__getattr__(self, name)
+        func = xmlrpc_client.ServerProxy.__getattr__(self, name)
         def wrapper(*args, **kwargs):
             start_time = time.time()
             try:
                 result = func(*args, **kwargs)
-            except xmlrpclib.Fault as e:
+            except xmlrpc_client.Fault as e:
                 total_time = int((time.time() - start_time) * 1000)
                 events.request_failure.fire(request_type="xmlrpc", name=name, response_time=total_time, exception=e)
             else:
