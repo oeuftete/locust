@@ -52,7 +52,7 @@ def parse_options():
         default=8089,
         help="Port on which to run web host"
     )
-    
+
     parser.add_option(
         '-f', '--locustfile',
         dest='locustfile',
@@ -338,7 +338,7 @@ def main():
     logger = logging.getLogger(__name__)
     
     if options.show_version:
-        print("Locust %s" % (version,))
+        logger.info("Locust %s" % (version,))
         sys.exit(0)
 
     locustfile = find_locustfile(options.locustfile)
